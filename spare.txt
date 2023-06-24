@@ -1,0 +1,21 @@
+ anagram :: String -> String -> Bool
+ anagram "" "" = True
+ anagram str1 str2
+    | sortedStr1 == sortedStr2 = True
+    | otherwise = False
+        where sortedStr1 = quicksort str1
+              sortedStr2 = quicksort str2
+
+
+isBST :: Tree -> Bool
+isBST tree = isBST' tree Nothing Nothing --Helper function to allow for local min and max to be passed
+  where
+    isBST' Nil _ _ = True
+    isBST' (Node x left right) minVal maxVal =
+        let leftBST = isBST' left minVal (Just x)
+            rightBST = isBST' right (Just x) maxVal
+        in case (minVal, maxVal) of
+            (Just minV, Just maxV) -> minV <= x && x <= maxV && leftBST && rightBST
+            (Just minV, Nothing) -> minV <= x && leftBST
+            (Nothing, Just maxV) -> x <= maxV && rightBST
+            (Nothing, Nothing) -> leftBST && rightBST
